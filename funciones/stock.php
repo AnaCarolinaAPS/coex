@@ -21,8 +21,9 @@
     function getAtributos ($id) {
         $connection = conn();
 
-        $sql = "SELECT tb_producto_atributo.* FROM `tb_producto_atributo`
-        WHERE tb_producto_atributo.id_producto='$id' ORDER BY tb_producto_atributo.id";
+        $sql = "SELECT tb_producto_atributo.*, tb_atributo.nombre AS atributo FROM `tb_producto_atributo`
+				LEFT JOIN tb_atributo ON tb_producto_atributo.id_atributo = tb_atributo.id 
+				WHERE tb_producto_atributo.id_producto='$id' ORDER BY tb_producto_atributo.id";
 		$query = $connection->prepare($sql);
 		$query->execute();
 
@@ -40,12 +41,13 @@
         $connection = conn();
 
         if ($dependencia == "NULL") {
-            $sql = "SELECT tb_producto_combinacion.*, tb_producto_atr_valor.*, tb_producto_stock.stock FROM tb_producto_combinacion 
+			$sql = "SELECT tb_producto_combinacion.*, tb_producto_atr_valor.id, tb_producto_stock.stock, tb_atr_valor.nombre FROM tb_producto_combinacion
                     LEFT JOIN tb_producto_atr_valor ON tb_producto_atr_valor.id = tb_producto_combinacion.id_producto_atr_valor
-                    LEFT JOIN tb_producto_stock ON tb_producto_combinacion.id_combinacion = tb_producto_stock.id_combinacion 
+					LEFT JOIN tb_atr_valor ON tb_atr_valor.id = tb_producto_atr_valor.id_atr_valor                    
+					LEFT JOIN tb_producto_stock ON tb_producto_combinacion.id_combinacion = tb_producto_stock.id_combinacion 
                     WHERE tb_producto_atr_valor.id_atributo = '$atributo'
                     GROUP BY tb_producto_atr_valor.id
-                    ORDER BY tb_producto_atr_valor.nombre";    
+                    ORDER BY tb_atr_valor.nombre";   
         } else {
             // ORDER BY tb_producto_atr_valor.nombre";  
             $where1 = "";
@@ -62,8 +64,9 @@
                 }
             }
 
-            $sql = "SELECT tb_producto_combinacion.*, tb_producto_atr_valor.*, tb_producto_stock.stock FROM tb_producto_combinacion 
+            $sql = "SELECT tb_producto_combinacion.*, tb_producto_atr_valor.id, tb_producto_stock.stock, tb_atr_valor.nombre FROM tb_producto_combinacion 
                     LEFT JOIN tb_producto_atr_valor ON tb_producto_atr_valor.id = tb_producto_combinacion.id_producto_atr_valor
+					LEFT JOIN tb_atr_valor ON tb_atr_valor.id = tb_producto_atr_valor.id_atr_valor                    
                     LEFT JOIN tb_producto_stock ON tb_producto_combinacion.id_combinacion = tb_producto_stock.id_combinacion 
                     WHERE tb_producto_combinacion.id_combinacion IN 
                         (SELECT tb_producto_combinacion.id_combinacion FROM tb_producto_combinacion 
@@ -71,7 +74,7 @@
                     AND tb_producto_combinacion.id_producto_atr_valor != $where2
                     AND tb_producto_atr_valor.id_atributo = '$atributo'
                     GROUP BY tb_producto_atr_valor.id
-                    ORDER BY tb_producto_atr_valor.nombre";
+                    ORDER BY tb_atr_valor.nombre";
         }
 
         // $sql = "SELECT tb_producto_atr_valor.* FROM `tb_producto_atr_valor`

@@ -153,10 +153,12 @@
 
 	function getProdAtributosValoresByStock ($combinacion) {
 		$connection = conn();
-		$sql = "SELECT tb_producto_combinacion.*, tb_producto_atr_valor.nombre, tb_producto_atr_valor.id_atributo, tb_producto_atributo.nombre AS atributo FROM tb_producto_combinacion 
+		$sql = "SELECT tb_producto_combinacion.*, tb_atr_valor.nombre, tb_producto_atr_valor.id_atributo, tb_atributo.nombre AS atributo FROM tb_producto_combinacion 
 				LEFT JOIN tb_producto_atr_valor ON tb_producto_combinacion.id_producto_atr_valor = tb_producto_atr_valor.id
+				LEFT JOIN tb_atr_valor ON tb_producto_atr_valor.id_atr_valor = tb_atr_valor.id
 				LEFT JOIN tb_producto_atributo ON tb_producto_atr_valor.id_atributo = tb_producto_atributo.id
-				WHERE tb_producto_combinacion.id_combinacion = $combinacion ORDER BY tb_producto_atr_valor.id_atributo, tb_producto_atr_valor.nombre";
+				LEFT JOIN tb_atributo ON tb_producto_atributo.id_atributo = tb_atributo.id
+				WHERE tb_producto_combinacion.id_combinacion = $combinacion ORDER BY tb_producto_atr_valor.id_atributo, tb_atr_valor.nombre";
 		$query = $connection->prepare($sql);
 		$query->execute();
 

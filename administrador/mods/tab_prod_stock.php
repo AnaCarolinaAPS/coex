@@ -22,26 +22,38 @@
                 <?php 
                     if ($prodAtributos != null) { 
                         foreach ($prodAtributos as $row) {
+                            $nuevoValor = getAtributosValores($row['id_atributo']);
+                            $nuevos = "";
+                            if ($nuevoValor != null) {
+                                foreach ($nuevoValor as $linha) {
+                                    if ($nuevos == "") {
+                                        $nuevos = $linha['id'].".".$linha['nombre'];
+                                    } else {
+                                        $nuevos = $nuevos.";".$linha['id'].".".$linha['nombre'];
+                                    }
+                                }
+                            } 
+                            
                             $valores = getProdAtributosValores($row['id']);
                             $tableVlr = "";
                             if ($valores != null) {
                                 foreach ($valores as $linea) {
                                     if ($tableVlr == "") {
-                                        $tableVlr = $linea['id'].";".$linea['nombre'].";".$linea['activo'];
+                                        $tableVlr = $linea['id'].";".$linea['valor'].";".$linea['activo'];
                                     } else {
-                                        $tableVlr = $tableVlr."*".$linea['id'].";".$linea['nombre'].";".$linea['activo'];
+                                        $tableVlr = $tableVlr."*".$linea['id'].";".$linea['valor'].";".$linea['activo'];
                                     }
                                 }
                             } 
                 ?>
-                <tr data-toggle="modal" data-target="#AltAtributoModal" data-codigo="<?php echo $row['id'];?>" data-nombre="<?php echo $row['nombre'];?>" data-activo="<?php echo $row['activo'];?>" data-valores="<?php echo $tableVlr;?>">
-                    <td><?php echo $row['nombre'];?></td>
+                <tr data-toggle="modal" data-target="#AltAtributoModal" data-codigo="<?php echo $row['id'];?>" data-nombre="<?php echo $row['atributo'];?>" data-newval="<?php echo $nuevos;?>" data-atributo="<?php echo $row['id_atributo'];?>" data-activo="<?php echo $row['activo'];?>" data-valores="<?php echo $tableVlr;?>">
+                    <td><?php echo $row['atributo'];?></td>
                     <td>
                     <?php 
                         $valores = getProdAtributosValores($row['id']);
                         if ($valores != null) {
                             foreach ($valores as $linea) {
-                                echo $linea['nombre']."<br>";
+                                echo $linea['valor']."<br>";
                             }
                         }
                     ?>
@@ -77,8 +89,27 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="nombre">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Atributo" maxlength="80" required>
+                                <label for="atributo">Atributo</label>
+                                <select class="selectpicker" id="atributo" name="atributo" data-width="100%" data-live-search="true">
+                                    <?php
+                                        if ($atributos != null) {
+                                            $selected = "";
+                                            foreach ($atributos as $row) {	
+                                                // if ($row['id'] == $producto['id_marca']) {
+                                                //     $selected = " selected";
+                                                // } else {
+                                                    $selected = "";
+                                                // }
+                                    ?>
+                                        <option value="<?php echo $row['id'];?>" <?php echo $selected;?>><?php echo $row['nombre'];?></option> 
+                                    <?php 
+                                            } //END FOREACH
+                                        } //END IF
+                                    ?>
+                                </select>
+
+                                <!-- <label for="nombre">Nombre</label> -->
+                                <!-- <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Atributo" maxlength="80" required> -->
                             </div>
                         </div>
                     </div> <!-- row -->
@@ -107,8 +138,21 @@
                         <input type="hidden" class="form-control" id="codigo" name="codigo" required>
                         <div class="col-md-9">
                             <div class="form-group">
-                                <label for="nombre">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Atributo" maxlength="80" required>
+                                <label for="atributo">Atributo</label>
+                                <select class="selectpicker" id="atributo" name="atributo" data-width="100%" data-live-search="true" disabled>
+                                    <?php
+                                        if ($atributos != null) {
+                                            $selected = "";
+                                            foreach ($atributos as $row) {	
+                                    ?>
+                                        <option value="<?php echo $row['id'];?>"><?php echo $row['nombre'];?></option> 
+                                    <?php 
+                                            } //END FOREACH
+                                        } //END IF
+                                    ?>
+                                </select>
+                                <!-- <label for="nombre">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Atributo" maxlength="80" required> -->
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -184,8 +228,11 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="nombre">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Atributo" maxlength="80" required>
+                                <label for="valor">Valor</label>
+                                <select class="selectpicker" id="valor" name="valor" data-width="100%" data-live-search="true">
+                                </select>
+                                <!-- <label for="nombre">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Atributo" maxlength="80" required> -->
                             </div>
                         </div>
                     </div> <!-- row -->
@@ -215,7 +262,7 @@
                         <div class="col-md-9">
                             <div class="form-group">
                                 <label for="nombre">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Atributo" maxlength="80" required>
+                                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Atributo" maxlength="80" readonly>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -302,7 +349,6 @@
                                 }    
                             }
                 ?>
-                <!-- <tr> -->
                 <tr data-toggle="modal" data-target="#AltStockModal" data-codigo="<?php echo $row['id'];?>" data-valores="<?php echo $valorProd;?>" data-stock="<?php echo $row['stock'];?>" data-precio="<?php echo number_format($row['precio'], 0, ',', '.');?>" data-descuento="<?php echo number_format($row['valor_descuento'], 0, ',', '.');?>">
                     <td>
                         <?php 
@@ -312,7 +358,7 @@
                                 $valores = getProdAtributosValoresByStock ($row['id_combinacion']);
                                 if ($valores != null) { 
                                     foreach ($valores as $linea) {
-                                        echo '<span class="label label-primary" style="font-size:10pt;">'.$linea['nombre'].'</span> ';
+                                        echo '<span class="label label-primary" style="font-size:10pt;">'.$linea['valor'].'</span> ';
                                     }
                                 } else {
                                     echo 'UNICO';
@@ -386,7 +432,7 @@
                         ?>
                         <div class="<?php echo $col;?>">
                             <div class="form-group">
-                                <label for="atributo"><?php echo $row['nombre'];?></label>
+                                <label for="atributo"><?php echo $row['atributo'];?></label>
                                 <select class="selectpicker" id="atributo" name="valores[]" data-width="100%" data-live-search="true">
                                     <?php
                                         $valoresProd = "";
@@ -394,7 +440,7 @@
                                         if ($valores != null) {                                            
                                             foreach ($valores as $valor) {	
                                     ?>
-                                        <option value="<?php echo $valor['id'];?>"><?php echo $valor['nombre'];?></option> 
+                                        <option value="<?php echo $valor['id'];?>"><?php echo $valor['valor'];?></option> 
                                     <?php 
                                             } //END FOREACH
                                         } //END IF
@@ -464,7 +510,7 @@
                         ?>
                         <div class="<?php echo $col;?>">
                             <div class="form-group">
-                                <label for="atributo"><?php echo $row['nombre'];?></label>
+                                <label for="atributo"><?php echo $row['atributo'];?></label>
                                 <select class="selectpicker" id="<?php echo $id_atributo;?>" name="valores[]" data-width="100%" data-live-search="true" disabled>
                                     <?php
                                         $valoresProd = "";
@@ -472,7 +518,7 @@
                                         if ($valores != null) {                                            
                                             foreach ($valores as $valor) {	
                                     ?>
-                                        <option value="<?php echo $valor['id'];?>"><?php echo $valor['nombre'];?></option> 
+                                        <option value="<?php echo $valor['id'];?>"><?php echo $valor['valor'];?></option> 
                                     <?php 
                                             } //END FOREACH
                                         } //END IF

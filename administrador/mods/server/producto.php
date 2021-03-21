@@ -140,19 +140,19 @@
 					$result = 'Erro en las categorias.';
 				}
 
-				if ($result == $codigo) {
-					if ($atributos != null) {
-						$prodAtr = saveProdAtributo ($atributos, $codigo);
+				// if ($result == $codigo) {
+				// 	if ($atributos != null) {
+				// 		$prodAtr = saveProdAtributo ($atributos, $codigo);
 
-						if ($prodAtr == $codigo ) {
-							$result = $codigo;
-						} else {
-							$result = 'Erro en los atributos.';
-						}	
-					} else {
-						$result = $codigo;
-					}
-				}
+				// 		if ($prodAtr == $codigo ) {
+				// 			$result = $codigo;
+				// 		} else {
+				// 			$result = 'Erro en los atributos.';
+				// 		}	
+				// 	} else {
+				// 		$result = $codigo;
+				// 	}
+				// }
 			} else {
 				$result = null;
 			}
@@ -193,19 +193,19 @@
 					}
 				}
 
-				if ($result == $codigo) {
-					if ($atributos != null) {
-						$prodAtr = saveProdAtributo ($atributos, $codigo);
+				// if ($result == $codigo) {
+				// 	if ($atributos != null) {
+				// 		$prodAtr = saveProdAtributo ($atributos, $codigo);
 
-						if ($prodAtr == $codigo ) {
-							$result = $codigo;
-						} else {
-							$result = 'Erro en los atributos.';
-						}	
-					} else {
-						$result = $codigo;
-					}
-				}
+				// 		if ($prodAtr == $codigo ) {
+				// 			$result = $codigo;
+				// 		} else {
+				// 			$result = 'Erro en los atributos.';
+				// 		}	
+				// 	} else {
+				// 		$result = $codigo;
+				// 	}
+				// }
 			} else {
 				$result = null;
 			}			
@@ -328,7 +328,9 @@
 
 	function getProdAllAtributos ($producto) {
 		$connection = conn();
-		$sql = "SELECT * FROM tb_producto_atributo WHERE id_producto = '$producto' ORDER BY tb_producto_atributo.nombre";
+		$sql = "SELECT tb_producto_atributo.*, tb_atributo.nombre AS atributo FROM tb_producto_atributo 
+				LEFT JOIN tb_atributo ON tb_producto_atributo.id_atributo =  tb_atributo.id
+				WHERE id_producto = '$producto' ORDER BY tb_atributo.nombre";
 		$query = $connection->prepare($sql);
 		$query->execute();
 
@@ -342,11 +344,11 @@
 		return $result;
     }
 
-	function newProdAtributo ($producto, $nombre) {
+	function newProdAtributo ($producto, $atributo) {
 		$connection = conn();
 		try {
-			$sql = "INSERT INTO tb_producto_atributo (id_producto, nombre, activo)
-		 			VALUES ('$producto', '$nombre', 1)";
+			$sql = "INSERT INTO tb_producto_atributo (id_producto, id_atributo, activo)
+		 			VALUES ('$producto', '$atributo', 1)";
 			$query = $connection->prepare($sql);
 			$query->execute();
 
@@ -363,7 +365,7 @@
 		return $result;
     }
 
-	function saveProdAtributo ($id, $nombre, $activo) {
+	function saveProdAtributo ($id, $activo) {
 		$connection = conn();
 		
 		try {
@@ -372,7 +374,7 @@
 			$query->execute();
 
 			if ($query->rowCount() > 0) {
-				$sql = "UPDATE tb_producto_atributo SET nombre = '$nombre', activo = '$activo'
+				$sql = "UPDATE tb_producto_atributo SET activo = '$activo'
 	 					WHERE id = $id";
 				$query = $connection->prepare($sql);
 				$query->execute();
@@ -394,9 +396,10 @@
 
 	function getProdAtributosValoresByStock ($combinacion) {
 		$connection = conn();
-		$sql = "SELECT tb_producto_combinacion.*, tb_producto_atr_valor.nombre, tb_producto_atr_valor.id_atributo FROM tb_producto_combinacion 
+		$sql = "SELECT tb_producto_combinacion.*, tb_producto_atr_valor.id_atributo, tb_atr_valor.nombre AS valor FROM tb_producto_combinacion 
 				LEFT JOIN tb_producto_atr_valor ON tb_producto_combinacion.id_producto_atr_valor = tb_producto_atr_valor.id
-				WHERE tb_producto_combinacion.id_combinacion = $combinacion ORDER BY tb_producto_atr_valor.id_atributo, tb_producto_atr_valor.nombre";
+				LEFT JOIN tb_atr_valor ON tb_producto_atr_valor.id_atr_valor = tb_atr_valor.id
+				WHERE tb_producto_combinacion.id_combinacion = $combinacion ORDER BY tb_producto_atr_valor.id_atributo, tb_atr_valor.nombre";
 		$query = $connection->prepare($sql);
 		$query->execute();
 
@@ -412,7 +415,9 @@
 
 	function getProdAtributosValores ($atributo) {
 		$connection = conn();
-		$sql = "SELECT tb_producto_atr_valor.* FROM tb_producto_atr_valor WHERE id_atributo = '$atributo' ORDER BY tb_producto_atr_valor.nombre";
+		$sql = "SELECT tb_producto_atr_valor.*, tb_atr_valor.nombre AS valor FROM tb_producto_atr_valor 
+				LEFT JOIN tb_atr_valor ON tb_producto_atr_valor.id_atr_valor = tb_atr_valor.id
+				WHERE tb_producto_atr_valor.id_atributo = '$atributo' ORDER BY tb_atr_valor.nombre";
 		$query = $connection->prepare($sql);
 		$query->execute();
 
@@ -426,11 +431,11 @@
 		return $result;
 	}
 
-	function newProdAtributoValor ($nombre, $atributo) {
+	function newProdAtributoValor ($valor, $atributo) {
 		$connection = conn();
 		try {
-			$sql = "INSERT INTO tb_producto_atr_valor (nombre, id_atributo, activo)
-		 			VALUES ('$nombre', $atributo, 1)";
+			$sql = "INSERT INTO tb_producto_atr_valor (id_atr_valor, id_atributo, activo)
+		 			VALUES ($valor, $atributo, 1)";
 			$query = $connection->prepare($sql);
 			$query->execute();
 
@@ -447,7 +452,7 @@
 		return $result;
 	}
 
-	function saveProdAtributoValor ($id, $nombre, $activo) {
+	function saveProdAtributoValor ($id, $activo) {
 		$connection = conn();
 		
 		try {
@@ -456,7 +461,7 @@
 			$query->execute();
 
 			if ($query->rowCount() > 0) {
-				$sql = "UPDATE tb_producto_atr_valor SET nombre = '$nombre', activo = '$activo'
+				$sql = "UPDATE tb_producto_atr_valor SET activo = '$activo'
 	 					WHERE id = $id";
 				$query = $connection->prepare($sql);
 				$query->execute();
@@ -475,34 +480,6 @@
 		$connection = disconn($connection);
 		return $result;
 	}
-
-	// function saveProdAtributo ($atributos, $producto) {
-	// 	$connection = conn();
-	// 	$result = null;
-	// 	try {
-	// 		$result = $producto;
-	// 		$sql = "DELETE FROM tb_producto_atributo WHERE id_producto = '$producto'";
-	// 		$query = $connection->prepare($sql);
-	// 		$query->execute();
-
-	// 		foreach ($atributos as $atributo) {
-	// 			$sql = "INSERT INTO tb_producto_atributo (id_producto, id_atributo)
-	// 			VALUES ('$producto', '$atributo')";
-
-	// 			$query = $connection->prepare($sql);
-	// 			$query->execute();
-
-	// 			if ($query->rowCount() <= 0) {
-	// 				$result = null;
-	// 			}
-	// 		}
-
-	// 	} catch (\Exception $e) {
-	// 		$result = $e;
-	// 	}
-	// 	$connection = disconn($connection);
-	// 	return $result;
-	// }
 
 	function getProductoStock ($producto) {
 		$connection = conn();

@@ -210,6 +210,8 @@ $(document).ready(function(){
         var button = $(event.relatedTarget) // objeto que disparó el modal
         var codigo = button.data('codigo')
         var nombre = button.data('nombre')
+        var select = button.data('newval')
+        var atributo = button.data('atributo')
         var valores = button.data('valores')
         var activo = button.data('activo')
 
@@ -217,8 +219,10 @@ $(document).ready(function(){
         var modal = $(this)
         modal.find('.modal-title').text('Atributo ' + nombre);
         modal.find('#codigo').val(codigo);
-        modal.find('#nombre').val(nombre);
-        document.getElementById("nuevovlr").dataset.codigo =  codigo;
+        modal.find('#atributo').val(atributo);
+        $('.selectpicker').selectpicker('refresh');
+        document.getElementById("nuevovlr").dataset.codigo = codigo;
+        document.getElementById("nuevovlr").dataset.select = select;
       
         if (activo == "1") {
             $('#activo').bootstrapToggle('on')
@@ -262,9 +266,19 @@ $(document).ready(function(){
     $(document).on('shown.bs.modal','#AddValorModal', function (event) {
         var button = $(event.relatedTarget) // objeto que disparó el modal
         var codigo = button.data('codigo')
+        var valores = button.data('select')
 
         var modal = $(this)
         modal.find('#codigo').val(codigo);
+
+        $('#valor').empty();
+        valores = valores.split(";");
+        for (var i = 0; i < valores.length; i++) {
+            valor = valores[i].split(".");
+            $('#valor').append('<option value="' + valor[0] + '">' + valor[1] + '</option>');
+        }
+        $('.selectpicker').selectpicker('refresh');
+        console.log(valor);
     })
 });
 

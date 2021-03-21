@@ -3,7 +3,7 @@
 	include_once "mods/server/producto_img.php";
     include_once "mods/server/categoria.php";
 	include_once "mods/server/marca.php";
-	// include_once "mods/server/atributo.php";
+	include_once "mods/server/atributo.php";
 	include_once "mods/server/uploads.php";
 
 	// if ($_SESSION['action'] == "new") {
@@ -29,7 +29,7 @@
 	}
 
 	$categorias = getCategorias();
-	$atributos = null;//getAllAtributos();	
+	$atributos = getAllAtributos();	
 	$marcas = getAllMarcas();
     
 	$prodAtributos = getProdAllAtributos($_GET['producto']);
@@ -262,7 +262,7 @@
 			$_SESSION['prod_tab'] = "stock";
 		} else if (isset($_POST['nuevoatributo'])) {
 
-			$incluir = newProdAtributo ($_GET['producto'], $_POST['nombre']);
+			$incluir = newProdAtributo ($_GET['producto'], $_POST['atributo']);
 			if (substr($incluir,0,1) == "E") {
 				$tipomensaje = 'error';
 				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$incluir.'"</p>';
@@ -283,7 +283,7 @@
 				$activo = 1;
 			}
 
-			$guardar = saveProdAtributo ($_POST['codigo'], $_POST['nombre'], $activo);
+			$guardar = saveProdAtributo ($_POST['codigo'], $activo);
 
 			if ($guardar == $_POST['codigo']) {
 				$tipomensaje = 'success';
@@ -298,7 +298,7 @@
 				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$guardar.'"</p>';
 			}
 		} else if (isset($_POST['nuevovlr'])) {
-			$incluir = newProdAtributoValor ($_POST['nombre'], $_POST['codigo']);
+			$incluir = newProdAtributoValor ($_POST['valor'], $_POST['codigo']);
 			if (substr($incluir,0,1) == "E") {
 				$tipomensaje = 'error';
 				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$incluir.'"</p>';
@@ -320,7 +320,7 @@
 				$activo = 1;
 			}
 
-			$guardar = saveProdAtributoValor ($_POST['codigo'], $_POST['nombre'], $activo);
+			$guardar = saveProdAtributoValor ($_POST['codigo'], $activo);
 
 			if ($guardar == $_POST['codigo']) {
 				$tipomensaje = 'success';

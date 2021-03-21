@@ -271,7 +271,7 @@ error_reporting(E_ALL);*/
                 $.each(data.message, function(i,obj){
                     //Create and append select list
                     var titulo = document.createElement("span");
-                    titulo.innerText = ""+obj.nombre;
+                    titulo.innerText = ""+obj.atributo;
                     myParent.appendChild(titulo);
 
                     var selectList = document.createElement("select");
@@ -351,7 +351,7 @@ error_reporting(E_ALL);*/
                     }
                     $('#'+select).append('<option value="' + obj.id + '"'+primer+'>' + obj.nombre + '</option>');
                     primer = "";
-                    // console.log('->'+select+" ->"+obj.nombre);
+                    console.log('->'+select+" ->"+atributo);
                 });
                 
                 var atr = document.getElementsByName("atributo[]");

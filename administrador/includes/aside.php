@@ -23,8 +23,8 @@
 			$subcategoria2 = "";
 			$submarca1 = "";
 			$submarca2 = "";
-			// $subatributo1 = "";
-			// $subatributo2 = "";
+			$subatributo1 = "";
+			$subatributo2 = "";
 			$subproducto1 = "";
 			$subproducto2 = "";
 			$subvendedor1 = "";
@@ -72,10 +72,10 @@
 				$catastro = "active";
 				$submarca1 = "active";
 				$submarca2 = "text-aqua";
-			// } else if (strpos($_SERVER['REQUEST_URI'], 'atributo.php') !== false){
-			// 	$catastro = "active";
-			// 	$subatributo1 = "active";
-			// 	$subatributo2 = "text-aqua";
+			} else if (strpos($_SERVER['REQUEST_URI'], 'atributo.php') !== false){
+				$catastro = "active";
+				$subatributo1 = "active";
+				$subatributo2 = "text-aqua";
 			} else if (strpos($_SERVER['REQUEST_URI'], 'producto.php') !== false OR strpos($_SERVER['REQUEST_URI'], 'producto_detalle.php') !== false){
 				$catastro = "active";
 				$subproducto1 = "active";
@@ -144,7 +144,7 @@
 					<li class="<?php echo $subcurriculum1;?>"><a href="curriculum.php"><i class="fa fa-circle-o <?php echo $subcurriculum2;?>"></i> Curriculum</a></li>
 					<li class="<?php echo $subcategoria1;?>"><a href="categoria.php"><i class="fa fa-circle-o <?php echo $subcategoria2;?>"></i> Categoria</a></li>
 					<li class="<?php echo $submarca1;?>"><a href="marca.php"><i class="fa fa-circle-o <?php echo $submarca2;?>"></i> Marca</a></li>
-					<!-- <li class="<?php echo $subatributo1;?>"><a href="atributo.php"><i class="fa fa-circle-o <?php echo $subatributo2;?>"></i> Atributos</a></li> -->
+					<li class="<?php echo $subatributo1;?>"><a href="atributo.php"><i class="fa fa-circle-o <?php echo $subatributo2;?>"></i> Atributos</a></li>
 					<li class="<?php echo $subproducto1;?>"><a href="producto.php"><i class="fa fa-circle-o <?php echo $subproducto2;?>"></i> Productos</a></li>
 					<li class="<?php echo $subvendedor1;?>"><a href="vendedor.php"><i class="fa fa-circle-o <?php echo $subvendedor2;?>"></i> Vendedores</a></li>
 					<li class="<?php echo $subunidad1;?>"><a href="unidad.php"><i class="fa fa-circle-o <?php echo $subunidad2;?>"></i> Unidades</a></li>
