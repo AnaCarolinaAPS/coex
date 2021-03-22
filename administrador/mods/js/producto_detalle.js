@@ -262,6 +262,33 @@ $(document).ready(function(){
     })
 });
 
+// modal para confirmar si quiere remover el registro
+var modalConfirm = function(callback){
+    //botón que llama el modal
+    $("#btn-confirmar-atributo").on("click", function(){
+        $("#DelAtributoModal").modal('show');
+    });
+
+    //si quiere remover el registro
+    $("#atributo-btn-si").on("click", function(){
+        callback(true);
+        $("DelAtributoModal").modal('hide');
+    });
+
+    //si no quiere remover el registro
+    $("#atributo-btn-no").on("click", function(){
+        callback(false);
+        $("DelAtributoModal").modal('hide');
+    });
+};
+//función que trabaja con la respuesta del modal (sí o no)
+modalConfirm(function(confirm){
+    if(confirm){
+        //Acciones si el usuario confirma
+        $("#btn-excluir-atributo").click();
+    }
+});
+
 $(document).ready(function(){
     $(document).on('shown.bs.modal','#AddValorModal', function (event) {
         var button = $(event.relatedTarget) // objeto que disparó el modal
@@ -303,6 +330,33 @@ $(document).ready(function(){
     })
 });
 
+// modal para confirmar si quiere remover el registro
+var modalConfirmVlr = function(callback){
+    //botón que llama el modal
+    $("#btn-confirmar-vlr").on("click", function(){
+        $("#mi-modal-vlr").modal('show');
+    });
+
+    //si quiere remover el registro
+    $("#modal-btn-si-vlr").on("click", function(){
+        callback(true);
+        $("#mi-modal-vlr").modal('hide');
+    });
+
+    //si no quiere remover el registro
+    $("#modal-btn-no-vlr").on("click", function(){
+        callback(false);
+        $("#mi-modal").modal('hide');
+    });
+};
+//función que trabaja con la respuesta del modal (sí o no)
+modalConfirmVlr(function(confirm){
+    if(confirm){
+        //Acciones si el usuario confirma
+        $("#btn-excluir-vlr").click();
+    }
+});
+
 $(document).ready(function(){
     $(document).on('shown.bs.modal','#AltStockModal', function (event) {
         var button = $(event.relatedTarget) // objeto que disparó el modal
@@ -330,4 +384,31 @@ $(document).ready(function(){
             }
         }
     })
+});
+
+// modal para confirmar si quiere remover el registro
+var modalConfirmVlr = function(callback){
+    //botón que llama el modal
+    $("#btn-confirmar-stock").on("click", function(){
+        $("#DelStockModal").modal('show');
+    });
+
+    //si quiere remover el registro
+    $("#modal-btn-si-stock").on("click", function(){
+        callback(true);
+        $("#DelStockModal").modal('hide');
+    });
+
+    //si no quiere remover el registro
+    $("#modal-btn-no-stock").on("click", function(){
+        callback(false);
+        $("#DelStockModal").modal('hide');
+    });
+};
+//función que trabaja con la respuesta del modal (sí o no)
+modalConfirmVlr(function(confirm){
+    if(confirm){
+        //Acciones si el usuario confirma
+        $("#btn-excluir-stock").click();
+    }
 });

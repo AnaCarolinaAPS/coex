@@ -45,7 +45,7 @@
                     LEFT JOIN tb_producto_atr_valor ON tb_producto_atr_valor.id = tb_producto_combinacion.id_producto_atr_valor
 					LEFT JOIN tb_atr_valor ON tb_atr_valor.id = tb_producto_atr_valor.id_atr_valor                    
 					LEFT JOIN tb_producto_stock ON tb_producto_combinacion.id_combinacion = tb_producto_stock.id_combinacion 
-                    WHERE tb_producto_atr_valor.id_atributo = '$atributo'
+                    WHERE tb_producto_atr_valor.id_atributo = '$atributo' AND tb_producto_stock.stock > 0
                     GROUP BY tb_producto_atr_valor.id
                     ORDER BY tb_atr_valor.nombre";   
         } else {
@@ -73,6 +73,7 @@
                         WHERE tb_producto_combinacion.id_producto_atr_valor = $where1) 
                     AND tb_producto_combinacion.id_producto_atr_valor != $where2
                     AND tb_producto_atr_valor.id_atributo = '$atributo'
+					AND tb_producto_stock.stock > 0
                     GROUP BY tb_producto_atr_valor.id
                     ORDER BY tb_atr_valor.nombre";
         }

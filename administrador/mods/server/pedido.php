@@ -170,6 +170,18 @@
 			$query->execute();
 
 			if ($query->rowCount() > 0) {
+				$pedido = $query->fetch();
+				// $stock = "NO STATUS";
+				if ($pedido['status'] == 5) {//cancelado
+					if ($status < 5) { //Não cancelado						
+						$stock = actualizaStockCancelado($id, -1);
+					}
+				} else {
+					if ($status == 5) {//Cancelado
+						$stock = actualizaStockCancelado($id, +1);
+					}
+				}
+
 				$sql = "UPDATE tb_pedido SET status = $status
 	 					WHERE id = $id";
 				$query = $connection->prepare($sql);
@@ -179,6 +191,63 @@
 					$result = $id;
 				} else {
 					$result = $id; //Sem alteração
+				}
+			} else {
+				$result = null;
+			}			
+		} catch (\Exception $e) {
+			$result = $e;
+		}
+		$connection = disconn($connection);
+		return $result;
+	}
+
+	function actualizaStockCancelado ($id, $sinal) {
+		$connection = conn();
+		
+		try {
+			$sql = "SELECT * from tb_ped_detalle WHERE id_pedido = $id";
+			$query = $connection->prepare($sql);
+			$query->execute();
+
+			if ($query->rowCount() > 0) {
+				$pedidos = $query->fetchAll();
+				$actualiza = 0;
+				foreach ($pedidos AS $pedido) {
+					$actualiza = $sinal*$pedido['ctd'];
+					$result = actualizaStock($pedido['id_stock'], $actualiza);
+				}
+			} else {
+				$result = null;
+			}			
+		} catch (\Exception $e) {
+			$result = $e;
+		}
+		$connection = disconn($connection);
+		return $result;
+	}
+
+	function actualizaStock ($codigo, $stock) {
+		$connection = conn();
+		try {
+			$sql = "SELECT * from tb_producto_stock WHERE id = '$codigo'";
+			$query = $connection->prepare($sql);
+			$query->execute();
+
+			if ($query->rowCount() > 0) {
+				$newstock = $query->fetch();
+				$newstock = $newstock['stock'];
+				$newstock = $newstock + $stock;
+				$sql = "UPDATE tb_producto_stock SET stock = '$newstock'
+	 					WHERE id = '$codigo'";
+				$query = $connection->prepare($sql);
+				$query->execute();
+
+				// $result = $newstock;
+				if ($query->rowCount() > 0) {
+					$result = $codigo;
+				} else {
+					$result = $codigo; //Sem alteração
 				}
 			} else {
 				$result = null;

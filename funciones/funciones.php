@@ -1,5 +1,5 @@
 <?php
-	include_once "./conn/conn.php";
+	include_once "conn/conn.php";
 	
 	function getAllMenuCategorias ($tienda, $posicion) {
 		$connection = conn();
@@ -853,6 +853,37 @@ function saveCliDireccion ($id, $depart, $ciudad, $calle, $referencias) {
 	return $result;
 }
 
+function actualizaStock ($id_combinacion, $ctd) {
+	$connection = conn();
+	try {
+		$sql = "SELECT * from tb_producto_stock WHERE id_combinacion = '$id_combinacion'";
+		$query = $connection->prepare($sql);
+		$query->execute();
+
+		if ($query->rowCount() > 0) {
+			$stock = $query->fetch();
+			$new = $stock['stock']-$ctd;
+
+			$sql = "UPDATE tb_producto_stock SET stock = '$new'
+					 WHERE id_combinacion = '$id_combinacion'";
+			$query = $connection->prepare($sql);
+			$query->execute();
+
+			if ($query->rowCount() > 0) {
+				$result = $id_combinacion;
+			} else {
+				$result = $id_combinacion; //Sem alteração
+			}
+		} else {
+			$result = null;
+		}			
+	} catch (\Exception $e) {
+		$result = $e;
+	}
+	$connection = disconn($connection);
+	return $result;
+}
+
 function savePedidos ($id, $id_met_pago, $id_met_envio, $total, $observacion, $total_envio){
 	$connection = conn();
 	try {
@@ -876,11 +907,29 @@ function savePedidos ($id, $id_met_pago, $id_met_envio, $total, $observacion, $t
 	return $result;
 }
 
-function saveDetallePedidos ($id_pedido, $id_producto, $valor_unitario, $ctd, $descuento, $valor_total) {
+function saveDetallePedidos ($id_pedido, $id_producto, $id_combinacion, $combinacion, $valor_unitario, $ctd, $descuento, $valor_total) {
 	$connection = conn();
 	try {
-		$sql = "INSERT INTO tb_ped_detalle (id_pedido, id_producto, valor_unitario, ctd, descuento, valor_total)
-			VALUES ('$id_pedido', '$id_producto', '$valor_unitario', '$ctd', '$descuento', '$valor_total')";
+
+		if ($combinacion == "") {
+			$sql = "SELECT * from tb_producto_stock WHERE id_producto = '$id_producto'";
+			$query = $connection->prepare($sql);
+			$query->execute();	
+		} else {
+			$sql = "SELECT * from tb_producto_stock WHERE id_producto = '$id_producto' AND id_combinacion = '$id_combinacion'";
+			$query = $connection->prepare($sql);
+			$query->execute();	
+		}
+
+		if ($query->rowCount() > 0) {
+			$stock = $query->fetch();
+			$id_stock = $stock['id'];
+		} else {
+			return null;
+		}
+
+		$sql = "INSERT INTO tb_ped_detalle (id_pedido, id_producto, valor_unitario, id_stock, combinacion, ctd, descuento, valor_total)
+			VALUES ('$id_pedido', '$id_producto', '$valor_unitario', $id_stock, '$combinacion', '$ctd', '$descuento', '$valor_total')";
 		$query = $connection->prepare($sql);
 		$query->execute();
 		

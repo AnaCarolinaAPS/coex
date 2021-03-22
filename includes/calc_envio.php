@@ -1,7 +1,7 @@
 <?php 
 session_start();
- include_once "../conn/conn.php";
- include_once "../funciones/funciones.php";
+ include_once "conn/conn.php";
+ include_once "funciones/funciones.php";
  if(isset($_POST['id'])):
     $id_ciudad = $_POST['id_ciudad'];
     $id_met = $_POST['id'];

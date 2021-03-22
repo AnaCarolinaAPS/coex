@@ -44,13 +44,30 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
 
 		if ($guardar == $_SESSION['id_cliente']) {
 			$guardarpedido = savepedidos ($id_cliente, $id_met_pago, $id_met_envio, $total, $_POST['observacion'], $total_envio);
+			
 			if ($guardarpedido > 1) {
 				foreach ($cart as $carrito) {
 					$totalitem = $carrito['qty'] * $carrito['precio'];
-					saveDetallePedidos ($guardarpedido, $carrito['idproducto'], $carrito['precio'], $carrito['qty'],'0', $totalitem);
+					
+					$combinacion = $carrito['combinacion'];
+
+					if ($combinacion == "") {
+						$combinacion = '';
+					} else {
+						$valores = getProdAtributosValoresByStock ($combinacion);
+						if ($valores != null) { 
+							$combinacion = "";
+							foreach ($valores as $linea) {
+								$combinacion = $combinacion.'<b>'.$linea['atributo'].":</b> ".$linea['nombre'].'<br>';
+							}
+						} 
+					}
+					
+					$teste = saveDetallePedidos ($guardarpedido, $carrito['idproducto'], $carrito['combinacion'], $combinacion, $carrito['precio'], $carrito['qty'],'0', $totalitem);
+					actualizaStock($carrito['combinacion'], $carrito['qty']);
 				}
-				$tipomensaje = 'success';			   
-				//$mensaje= '<p class="text-center alert alert-success">Los datos fueron actualizados correctamente. Su Numero de pedido es:'.$guardarpedido.'</p>';
+				// $tipomensaje = 'success';			   
+				// $mensaje= '<p class="text-center alert alert-success">Los datos fueron actualizados correctamente. Su Numero de pedido es:'.$guardarpedido.'</p>';
 				//if($id_met_pago==1){
 				//	enviarPagopar($guardarpedido, $total_envio, $total, $id_cliente, $ruc, $_POST['email'], $_POST['nombre'], $_POST['apellido'], $_POST['telefono'],
 				//					$_POST['calle'], $_POST['documento'], $_POST['razon_social']);

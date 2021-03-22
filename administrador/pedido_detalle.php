@@ -211,6 +211,12 @@
                                         </br>
                                         </br>
                                         <?php 
+                                            if ($row['combinacion'] == "" OR $row['combinacion'] == NULL) {
+                                                echo 'UNICO'; //Unico
+                                            } else {
+                                                echo $row['combinacion'];
+                                            }
+
                                             // $combinacion = getStockValor ($row['id_stock']);
                                             // if ($combinacion != null) { 
                                             //     foreach ($combinacion as $linea) {
@@ -219,18 +225,18 @@
                                             // } else {
                                             //     echo 'UNICO'; //Unico
                                             // }
-                                            if ($row['id_combinacion'] == "") {
-                                                echo '';
-                                            } else {
-                                                $valores = getProdAtributosValoresByStock ($row['id_combinacion']);
-                                                if ($valores != null) { 
-                                                    foreach ($valores as $linea) {
-                                                        echo '<span class="label label-primary" style="font-size:10pt;">'.$linea['nombre'].'</span> ';
-                                                    }
-                                                } else {
-                                                    echo 'UNICO';
-                                                }    
-                                            }
+                                            // if ($row['id_combinacion'] == "") {
+                                            //     echo '';
+                                            // } else {
+                                            //     $valores = getProdAtributosValoresByStock ($row['id_combinacion']);
+                                            //     if ($valores != null) { 
+                                            //         foreach ($valores as $linea) {
+                                            //             echo '<span class="label label-primary" style="font-size:10pt;">'.$linea['nombre'].'</span> ';
+                                            //         }
+                                            //     } else {
+                                            //         echo 'UNICO';
+                                            //     }    
+                                            // }
                                         ?>
                                     </td>
                                     <td><img src="../img/productos/<?php echo getProductoImg ($row['id_producto'])['url'] ;?>" class="img-fluid img-thumbnail" alt="marca" style="max-width: 150px;"></td>

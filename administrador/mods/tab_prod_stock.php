@@ -22,18 +22,6 @@
                 <?php 
                     if ($prodAtributos != null) { 
                         foreach ($prodAtributos as $row) {
-                            $nuevoValor = getAtributosValores($row['id_atributo']);
-                            $nuevos = "";
-                            if ($nuevoValor != null) {
-                                foreach ($nuevoValor as $linha) {
-                                    if ($nuevos == "") {
-                                        $nuevos = $linha['id'].".".$linha['nombre'];
-                                    } else {
-                                        $nuevos = $nuevos.";".$linha['id'].".".$linha['nombre'];
-                                    }
-                                }
-                            } 
-                            
                             $valores = getProdAtributosValores($row['id']);
                             $tableVlr = "";
                             if ($valores != null) {
@@ -42,6 +30,27 @@
                                         $tableVlr = $linea['id'].";".$linea['valor'].";".$linea['activo'];
                                     } else {
                                         $tableVlr = $tableVlr."*".$linea['id'].";".$linea['valor'].";".$linea['activo'];
+                                    }
+                                }
+                            } 
+                            $nuevoValor = getAtributosValores($row['id_atributo']);
+                            $nuevos = "";
+                            if ($nuevoValor != null) {
+                                foreach ($nuevoValor as $linha) {
+                                    $show = 1;
+                                    if ($valores != null) { 
+                                        foreach ($valores as $lin) {
+                                            if ($lin['id_atr_valor'] == $linha['id']) {
+                                                $show = 0;  
+                                            }
+                                        }
+                                    }
+                                    if ($show == 1){
+                                        if ($nuevos == "") {
+                                            $nuevos = $linha['id'].".".$linha['nombre'];
+                                        } else {
+                                            $nuevos = $nuevos.";".$linha['id'].".".$linha['nombre'];
+                                        }                                            
                                     }
                                 }
                             } 
@@ -95,14 +104,19 @@
                                         if ($atributos != null) {
                                             $selected = "";
                                             foreach ($atributos as $row) {	
-                                                // if ($row['id'] == $producto['id_marca']) {
-                                                //     $selected = " selected";
-                                                // } else {
-                                                    $selected = "";
-                                                // }
+                                                $show = 1;
+                                                if ($prodAtributos != null) { 
+                                                    foreach ($prodAtributos as $lin) {
+                                                        if ($lin['id_atributo'] == $row['id']) {
+                                                            $show = 0;  
+                                                        }
+                                                    }
+                                                }
+                                                if ($show == 1){
                                     ?>
-                                        <option value="<?php echo $row['id'];?>" <?php echo $selected;?>><?php echo $row['nombre'];?></option> 
+                                        <option value="<?php echo $row['id'];?>"><?php echo $row['nombre'];?></option> 
                                     <?php 
+                                                } //END IF SHOW
                                             } //END FOREACH
                                         } //END IF
                                     ?>
@@ -186,8 +200,8 @@
                     </div> <!-- row -->
                 </div> <!-- modal-body -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger pull-left" name="excluir" id="btn-confirmar">Excluir</button>
-                    <button type="submit" class="btn" name="excluir" id="btn-excluir" style="display: none;">Submit Excluir</button>
+                    <button type="button" class="btn btn-danger pull-left" id="btn-confirmar-atributo">Excluir</button>
+                    <button type="submit" class="btn" name="excluiratributo" id="btn-excluir-atributo" style="display: none;">Submit Excluir</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                     <button type="submit" class="btn btn-primary" name="guardaratributo">Guardar</button>
                 </div>
@@ -198,7 +212,7 @@
 <!-- ./AltModal -->	
 
 <!-- Confirmación Modal (para excluisiones) -->
-<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="mi-modal">
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="DelAtributoModal">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -206,8 +220,8 @@
                 <h4 class="modal-title" id="myModalLabel">¿Deseas eliminar este registro?</h4>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="modal-btn-si">Sí</button>
-                <button type="button" class="btn btn-primary" id="modal-btn-no">No</button>
+                <button type="button" class="btn btn-default" id="atributo-btn-si">Sí</button>
+                <button type="button" class="btn btn-primary" id="atributo-btn-no">No</button>
             </div>
         </div>
     </div>
@@ -231,8 +245,6 @@
                                 <label for="valor">Valor</label>
                                 <select class="selectpicker" id="valor" name="valor" data-width="100%" data-live-search="true">
                                 </select>
-                                <!-- <label for="nombre">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Atributo" maxlength="80" required> -->
                             </div>
                         </div>
                     </div> <!-- row -->
@@ -551,8 +563,8 @@
                     </div>
                 </div> <!-- modal-body -->
                 <div class="modal-footer">
-                    <!-- <button type="button" class="btn btn-danger pull-left" name="excluir" id="btn-confirmar-vlr">Excluir</button> -->
-                    <!-- <button type="submit" class="btn" name="excluirstock" id="btn-excluir-vlr" style="display: none;">Submit Excluir</button> -->
+                    <button type="button" class="btn btn-danger pull-left" name="excluir" id="btn-confirmar-stock">Excluir</button>
+                    <button type="submit" class="btn" name="excluirstock" id="btn-excluir-stock" style="display: none;">Submit Excluir</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                     <button type="submit" class="btn btn-primary" name="guardarstock">Guardar</button>
                 </div>
@@ -562,4 +574,19 @@
 </div><!-- /.modal -->
 <!-- ./AltModal -->	
 
-
+<!-- Confirmación Modal (para excluisiones) -->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="DelStockModal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">¿Deseas eliminar este registro?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="modal-btn-si-stock">Sí</button>
+                <button type="button" class="btn btn-primary" id="modal-btn-no-stock">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Confirmación Modal (para excluisiones) -->

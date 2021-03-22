@@ -260,6 +260,22 @@
 				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$guardar.'"</p>';
 			}
 			$_SESSION['prod_tab'] = "stock";
+
+		} else if (isset($_POST['excluirstock'])){
+			$excluir = deleteStock ($_POST['codigo']);
+
+			if ($excluir == $_POST['codigo']) {
+				$tipomensaje = 'success';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron eliminados correctamente.</p>';
+				
+				$stock = getProductoStock ($_GET['producto']);
+			} else if ($excluir == null) {
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Registro NO ENCONTRADO</p>';
+			} else {
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$excluir.'"</p>';
+			}
 		} else if (isset($_POST['nuevoatributo'])) {
 
 			$incluir = newProdAtributo ($_GET['producto'], $_POST['atributo']);
@@ -296,6 +312,24 @@
 			} else {
 				$tipomensaje = 'error';
 				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$guardar.'"</p>';
+			}
+		} else if (isset($_POST['excluiratributo'])){
+			$excluir = deleteProdAtributo ($_POST['codigo']);
+
+			if ($excluir == $_POST['codigo']) {
+				$tipomensaje = 'success';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron eliminados correctamente.</p>';
+				
+				$prodAtributos = getProdAllAtributos($_GET['producto']);
+			} else if ($excluir == "**stock**") {
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Stock con combinación encontrado!<br>Atributo no pudo ser eliminado, favor eliminar stock primero.</p>';
+			} else if ($excluir == null) {
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Registro NO ENCONTRADO</p>';
+			} else {
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$excluir.'"</p>';
 			}
 		} else if (isset($_POST['nuevovlr'])) {
 			$incluir = newProdAtributoValor ($_POST['valor'], $_POST['codigo']);
@@ -335,6 +369,24 @@
 				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$guardar.'"</p>';
 			}
 			$_SESSION['prod_tab'] = "stock";
+		} else if (isset($_POST['excluirvlr'])){
+			$excluir = deleteProdAtributoValor ($_POST['codigo']);
+
+			if ($excluir == $_POST['codigo']) {
+				$tipomensaje = 'success';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron eliminados correctamente.</p>';
+				
+				$prodAtributos = getProdAllAtributos($_GET['producto']);
+			} else if ($excluir == "**stock**") {
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Stock con combinación encontrado!<br>Valor no pudo ser eliminado, favor eliminar stock primero.</p>';
+			} else if ($excluir == null) {
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Registro NO ENCONTRADO</p>';
+			} else {
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$excluir.'"</p>';
+			}
 		}
 	}
 ?>
