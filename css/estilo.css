@@ -38,7 +38,11 @@ main {
   border-radius: 0;
   border: 0px;
   margin: 0;
-  background: #fffffff5;
+  background: #f1f1f1;
+  display: block;
+  overflow: scroll;
+  PADDING: 5px;
+  height: 300px;
 }
 
 button {
@@ -248,7 +252,7 @@ input.btn.btn-success {
     margin: 8px;
     padding: 10px;
     text-align: center;
-    min-height: 380px;
+    min-height: 400px;
     background: white;
 
   }
@@ -283,7 +287,7 @@ input.btn.btn-success {
     font-size: 12px;
     margin: 0 0 7px;
     text-transform: uppercase !important;
-    padding: 20px !important;
+    padding: 20px 0 !important;
 }
 
 .product-grid .title a {
@@ -486,6 +490,9 @@ section#product-area{padding: 50px 0 50px 0; }
   top: 40%;
   transform: translateY(-50%);
 }
+.owl-item {
+  background: none;
+}
 
 .owl-prev {
   left: -2rem;
@@ -496,15 +503,15 @@ section#product-area{padding: 50px 0 50px 0; }
 }
 
 .owl-theme .owl-nav [class*='owl-'] {
-    color: #FFF;
-    font-size: 16px;
-    margin: 5px;
-    padding: 10px;
-    background: #fcb800;
-    display: inline-block;
-    cursor: pointer;
-    border-radius: 3px;
-    margin: 35px;
+  color: #FFF;
+  font-size: 16px;
+  margin: 5px;
+  padding: 10px;
+  background: #e50202;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 3px;
+  margin: 0;
 }
 
 p.price {
@@ -516,9 +523,10 @@ p.price span {
     color: green;
 }
 
-.accordion-wrap{
+/*.accordion-wrap{
     border-bottom: 1px solid #ddba4d;
-}
+}*/
+
 
 .accordion-item {
   width: 100%;
@@ -1375,9 +1383,7 @@ a.icon-link .fa{
   font-weight: 400;
 }
 
-.navbar-dark .navbar-nav .nav-link:hover{
-  /*color: #f1efef;*/
-}
+
 
 
 @media (max-width: 768px) {
@@ -1414,6 +1420,7 @@ form.form-inline.mt-2.mt-md-0 input {
     font-size: 14px;
   }
 }
+
 
 /* escritorio normales */
 @media (min-width: 992px) {
@@ -1780,5 +1787,37 @@ nav#menu-fix {
   font-weight: 800;
 }
 
+.block-marcas-cateegory {
+  min-width: 100px;
+  background: white;
+  min-height: 140px;
+  text-align: center;
+}
+p.titulo-marca {
+  font-size: 45px;
+  font-weight: 800;
+  color: #c8cfc8;
+  padding: 15px;
+}
 
+/*.img-sub-cat:hover{
+  transform: scale(1.2);
+}
+
+*/
+
+.aside {
+  background: white;
+  padding: 15px;
+  border: 1px solid #d9d0d0;
+}
+
+p.accordion-header {
+  font-size: 14px;
+}
+p.category-menu a {
+  color: #282828;
+  font-size: 14px;
+  text-decoration: none;
+}
 

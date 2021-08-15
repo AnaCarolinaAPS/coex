@@ -80,8 +80,11 @@ if (isset($_POST['boletin'])) {
                               $submenu = getAllMenuCategorias($mainmenu['id'],'menu');
                                   if ($submenu) {
                                       foreach ($submenu as $subm) { ?>
-                                          <li style="border-bottom: 1px solid #dae0e0;padding: 5px;"><a href="categoria.php?cat=<?php echo $subm['id'] ?>"><?php echo $subm['nombre'] ?></a></li>
-                                         
+                                          <li style="border-bottom: 1px solid #dae0e0;padding: 5px;">
+                                          <a href="categoria.php?cat=<?php echo $subm['id'] ?>" <?php if ($subm['id'] == 166) { echo "style='font-weight: 800;color: var(--danger);' ";}?>><?php echo $subm['nombre'] ?>
+                                          </a>
+                                          </li>
+                                          
                                   <?php } ?>
                                  <?php  } ?>
 	                            </ul>

@@ -5,6 +5,10 @@
 	require "funciones/funciones.php";
   include("includes/head.php"); 
 
+  /*ini_set('display_errors',1);
+ini_set('display_startup_erros',1);
+error_reporting(E_ALL);*/
+
     //Crea una variable para saber en que pagina estás
     if (isset($_GET['pageno'])) {
       $pageno = $_GET['pageno'];
@@ -12,7 +16,7 @@
       $pageno = 1;
       }
       
-    $prod_por_pag = 16;
+    $prod_por_pag = 18;
     $offset = ($pageno-1) * $prod_por_pag; 
   
     $auxiliar = "";
@@ -20,10 +24,21 @@
    /**************/
    /* PAGINACION */
    /**************/
-   define('NUM_ITEMS_BY_PAGE', 12);
+   define('NUM_ITEMS_BY_PAGE', 18);
 	 $totalSubCategorias = 0;
-  
-  if (isset($_GET['cat']) && $_GET['cat'] > 0) {
+
+
+   //si existe una marca y una categoria  
+  if (isset($_GET['cat']) && isset($_GET['idm'])) {
+    $categoria = $_GET['cat'];
+    $marca = $_GET['idm'];
+    $productos = getProdbyCategoriaMarca($categoria, $marca, $offset, $prod_por_pag);
+    //paginacion
+    $total_pag = countProdbyCategoriaMarca($categoria, $marca);
+    $total_pag = sizeof($total_pag);
+    $auxiliar = "cat=".$_GET['cat']."&idm=".$_GET['idm']."&";;
+   //sino y si solo existe una categoria  
+	} else if (isset($_GET['cat']) && $_GET['cat'] > 0) {
     
 		$categoria = $_GET['cat'];
     $productos = getProdbyCategoria($categoria,$offset, $prod_por_pag);
@@ -32,6 +47,7 @@
     $total_pag = sizeof($total_pag);
     $auxiliar = "cat=".$_GET['cat']."&";
 
+ //si no existe ninguna categoria en la url
 	} else {
     $categoria = $_SESSION['tienda'];
     $productos = getProdbyCategoria($_SESSION['tienda'],$offset, $prod_por_pag);
@@ -59,7 +75,7 @@
 		$search=$_GET['search'];
     $productos = getProdbySearch($search,$offset, $prod_por_pag);
     
-    $total_pag = countProdbyCategoria($categoria);
+    $total_pag = countProdbySearch($search);
     $total_pag = sizeof($total_pag);
     $auxiliar = "cat=".$_GET['cat']."&";
     
@@ -97,17 +113,68 @@
 
 
 
+
+
     </section > 
+
+    <?php if (!isset($_GET['idm'])) {?>
+      <!--section style="
+      background: #e6e6e6;
+      ">
+      <div class="container">
+        <div class="row">
+            <?php 
+          
+            $marcas = getMarcasByCategory($_GET['cat']);?>
+            
+               <div class="col-md-12">
+               <hr>
+                  <h3 class="text-center">Marcas de la Categoria</h3>
+                  <hr>
+               <div class="row">
+                
+                <?php if ($marcas) {?>
+        
+                 <?php foreach ($marcas as $marca) { ?>
+                   <div class="col-md-4">
+                   <a href="categoria.php?cat=<?php echo $_GET['cat']; ?>&idm=<?php echo  $marca['id_marca']; ?>">
+                       <div class="block-marcas-cateegory">
+                       <?php if ($marca['link_imagen_marca'] == "no-image.png") { ?>
+                         <p class="titulo-marca"><?php echo  $marca['nombre_marca']; ?></p>
+                         <?php } else{?>
+                          <figure>
+                              <img src="img/marcas/<?php echo  $marca['link_imagen_marca']; ?>" alt="">
+                          </figure>
+                          <?php }?>
+                          <p class="text-center"><small><?php echo  $marca['cant_producto']; ?> Productos Disponibles</small> </p>
+                       </div>
+
+                       </a>
+                   </div>
+                <?php } } ?>
+                </div>
+               
+               </div>
+            
+           <?php  ?>
+            </div>
+  </div>
+</section--!>
+
+<?php }?>
+
         <section id="product-area">
             <div class="container">
+
+           
             
             <div class="row">
 
-            <?php
-      $subcategorias = getSubCategorias($_GET['cat']);
+  <?php
+    $subcategorias = getSubCategorias($_GET['cat']);
      if (isset($subcategorias)) { ?>
 
-      <div class="">   
+      <!--div class="">   
       <div class="row">   
       <?php  
       foreach ($subcategorias as $row) {?>
@@ -118,7 +185,7 @@
            <?php if ($row['url'] == "") {?>
               <img src="img/categorias/no-image.png" alt="" class="img-fluid img-sub-cat">
               <?php  } else {?>
-              <img src="img/categorias/<?php echo  $row['url'];?>" alt="" class="img-fluid">
+              <img src="img/categorias/<?php echo  $row['url'];?>" alt="" class="img-fluid img-sub-cat">
            <?php } ?>
               
               <?php echo  $row['nombre'];?>
@@ -129,53 +196,141 @@
 
         <?php }
       ?>
-      </div>     
+      </div-->     
       
       <?php  } ?>             
-                <hr>
-                  <h2>Productos de la Categoria</h2>
-                <hr>  
+                <!--hr>
+                  <h3>Productos de la Categoria</h3>
+                <hr-->  
+                <div class="col-md-3">   
+                <?php 
+                
 
-                <?php
-                 $menu = getAllMenuCategorias($categoria, 'cat');?>
-             
-                             <!-- MENU CATEGORIAS -->
-                <!--div class="col-md-3">       
-                         
+                if ($categoria != $_SESSION['tienda']) {
                   
+               
+                
+                $menu = getAllMenuCategorias($categoria, 'cat'); ?>             
+                <!-- MENU CATEGORIAS -->
+                    
+                 
                  <?php if (isset($menu)) {?> 
                     <div class="aside">   
-                    <h3>Categorias</h3>
-                  <?php foreach ($menu as $menuitem) { ?> 
-                  <?php 
-                   $submenu = getAllMenuCategorias($menuitem['id'], 'cat');
-                    if (($submenu != NULL)) { ?>
-                        <div class="accordion-wrap">
-                        <div class="accordion-item">
-                          <p class="accordion-header"> <?php echo $menuitem['nombre'];?> <i class="fa fa-angle-down" aria-hidden="true"></i> </p>
-                        </div>
-                        <div class="accordion-text">
-                            <?php  foreach ($submenu as $submenu_item) { ?>                           
-                              <p><a href="categoria.php?cat=<?php echo $submenu_item['id'];?> "><?php echo $submenu_item['nombre'];?> </a></p>                           
-                            <?php } ?>
-                        </div>
-                        </div>
-                    <?php } else { ?> 
-                      <div class="accordion-item">
-                    <p class="category-menu"><a href="categoria.php?cat=<?php echo $menuitem['id'];?> "><?php echo $menuitem['nombre'];?> </a></p>   
-                    </div>
-                    <?php } }?>
-                   </div>
-                   <?php } ?>
+                        <h4 style="text-transform:uppercase"><?php echo getCategoria($categoria)['nombre']; ?></h4>
+                        <hr>
+                      <?php foreach ($menu as $menuitem) { ?> 
+                      <?php 
+                      $submenu = getAllMenuCategorias($menuitem['id'], 'cat');
+                        if (($submenu != NULL)) { ?>
+                            <div class="accordion-wrap">
+                            <div class="accordion-item">
+                              <p class="accordion-header"> <?php echo $menuitem['nombre'];?> <i class="fa fa-angle-down" aria-hidden="true"></i> </p>
+                            </div>
+                            <div class="accordion-text">
+                                <?php  foreach ($submenu as $submenu_item) { ?>                           
+                                  <p><a href="categoria.php?cat=<?php echo $submenu_item['id'];?> "><?php echo $submenu_item['nombre'];?> </a></p>                           
+                                <?php } ?>
+                            </div>
+                            </div>
+                        <?php } else { ?> 
+                          <div class="accordion-item accordion-header accordion-wrap">
+                             <p class="category-menu"><a href="categoria.php?cat=<?php echo $menuitem['id'];?> "><?php echo $menuitem['nombre'];?> </a></p>   
+                          </div>
+                        <?php } }?>
+                      </div>
+                      <?php } 
+                      
+                        }
+                      
+                   ?>
+
+                  <br>
+                                    
+                 <?php 
+
+                 $menu = getAllMenuCategorias($_SESSION['tienda'], 'cat');                  
+                 if (isset($menu)) {?> 
+
+                    <div class="aside">   
+                       <h4 style="text-transform:uppercase">Categorias</h4>
+                       <hr>
+                       <?php
+                       foreach ($menu as $menuitem) { ?> 
+                       <?php 
+                       $submenu = getAllMenuCategorias($menuitem['id'], 'cat');
+                          if (($submenu != NULL)) { ?>
+                              <div class="accordion-wrap">
+                                 <div class="accordion-item">
+                                    <p class="accordion-header"> <?php echo $menuitem['nombre'];?> <i class="fa fa-angle-down" aria-hidden="true"></i> </p>
+                                 </div>
+                                 <div class="accordion-text">
+                                   <?php  foreach ($submenu as $submenu_item) { ?>                           
+                                      <p><a href="categoria.php?cat=<?php echo $submenu_item['id'];?> "><?php echo $submenu_item['nombre'];?> </a></p>                           
+                                   <?php } ?>
+                                 </div>
+                              </div>
+                            <?php } else { ?> 
+                            <div class="accordion-item accordion-header accordion-wrap">
+                                <p class="category-menu"><a href="categoria.php?cat=<?php echo $menuitem['id'];?> "><?php echo $menuitem['nombre'];?> </a></p>   
+                            </div>
+                           <?php } 
+                         } ?>
+                     </div>
+
+
+                   <?php } ?>   
                    
+              <br>
+                   <div class="aside">
+            <?php 
+
+            
+          
+                   $marcas = getMarcasByCategory($_GET['cat']);?>
+            
+               
+            
+                  <h4 class="text-center" style="text-transform:uppercase">Marcas</h4>
+                  <hr>
+                             
+                
+                <?php if ($marcas) {?>
+        
+                 <?php foreach ($marcas as $marca) { ?>
+                
+                 
+                   <a href="categoria.php?cat=<?php echo $_GET['cat']; ?>&idm=<?php echo  $marca['id_marca']; ?>">
+                       <div class="block-marcas-category">
+                          <?php if ($marca['link_imagen_marca'] == "no-image.png") { ?>
+                            <p class="titulo-marca"><?php echo  $marca['nombre_marca']; ?></p>
+                          <?php } else{?>
+                          <figure>
+                              <img src="img/marcas/<?php echo  $marca['link_imagen_marca']; ?>" alt="" style="
+    max-width: 200px;
+">
+                          </figure>
+                          <?php }?>
+                          <!--p class="text-center"><small><?php echo  $marca['cant_producto']; ?> Productos Disponibles</small> </p-->
+                       </div>
+
+                       </a>
+                  
+                <?php } 
+              
+              } ?>
+             
+         
+
+             </div>
+
 
                    
 
                
-               </div-->
+               </div>
 
                 <!-- PRODUCTOS DE CATEGORIA -->
-                <div class=" <?php if (isset($menu)) { ?> col-md-12 <?php }else { ?> col-md-12 <?php } ?>">
+                <div class=" <?php if (isset($menu)) { ?> col-md-9 <?php }else { ?> col-md-12 <?php } ?>">
                     <div class="row">
                     
                     <?php 
@@ -189,7 +344,7 @@
                         <?php } else { 
                           $cantProd = count($productos);
                           foreach ($productos as $row) {?>
-                          <div class="col-md-3 col-sm-6">
+                          <div class="<?php if (isset($menu)) { ?> col-md-4 col-sm-6<?php }else { ?> col-md-3 col-sm-6 <?php } ?>"">
                             <div class="product-grid">
                                 <div class="product-image">
                                 <a href="producto.php?id=<?php echo $row['id']; ?>">
@@ -206,6 +361,7 @@
                                     <a class="add-to-cart" href="producto.php?id=<?php echo $row['id']; ?>">Ver mas..</a>
                                 </div>
                                 <div class="product-content">
+                                    <small style="background: #dad7d7;color: white; text-transform: uppercase;  padding: 2px;"><?php echo getProdMarca($row['id_marca'])['nombre']; ?></small>
                                     <h3 class="title"><a href="producto.php?id=<?php echo $row['id']; ?>"><?php echo $row['nombre']; ?></a></h3>
                                     <span class="price"><?php if(($row['precio']>0)){ echo number_format($row['precio'], 0, ',', '.')." gs"; } else{ echo "<span class='price-consult'>Sobre Consulta</span>";} ?></span>
                               </div>

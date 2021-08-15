@@ -1,8 +1,7 @@
 <?php session_start();
 /*var_dump($_SESSION['cart']);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);*/
+*/
+
 ?>
 <!doctype html>
 <html lang="es">
@@ -117,7 +116,7 @@ error_reporting(E_ALL);*/
                             </p>
                             <hr>
 
-                           <?php $cant = getStock($id)['stock'];?>
+                           <?php $cant = getStock($id)['stock']; var_dump($cant);?>
                            <?php if ($producto['precio'] == 0 OR $cant == 0 OR $cant == "" OR $cant == "NULL" ) {?>  
 
                            <!-- Button trigger modal -->

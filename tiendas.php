@@ -44,14 +44,16 @@
 .photo img {
     display: block;
     height: auto;
-    position:relative;
-    left:38%;
+  
     padding:20px;
+    align-items: center;margin-left: auto;margin-right: auto;
+
 }
 .img-section{background:black;}
-.img-section img{
-    opacity:0.4;
-  
+.img-section img {
+    opacity: 0.4;
+    height: 940px;
+    width: 960px;
 }
 .img-section img:hover {
    /* opacity:0.8;*/
@@ -158,7 +160,7 @@ h2 {
 
 .social-footer {
     position: absolute;
-    bottom: 15px;
+    bottom: 25px;
     right: 0;
     background: #1a1a1a;
     z-index:101;
@@ -253,6 +255,44 @@ a.socialIcon:hover, .socialHoverClass {
 }
 }
 
+
+.image {
+  opacity: 1;
+  display: block;
+   height: auto;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.img-section:hover .image {
+  opacity: 0.8;
+}
+.img-section:hover  {
+  opacity: 0.8;
+}
+
+
+
+.text {
+  background-color: #4CAF50;
+  color: white;
+  font-size: 16px;
+  padding: 16px 32px;
+}
+
+
+
 </style>
   </head>
   <body>
@@ -266,7 +306,7 @@ a.socialIcon:hover, .socialHoverClass {
         <div class=" -fluid logo-t">
             <div class="row">
                 <div class="col-md-12 taxt-center photo" >
-                    <img src="img/logo2.png" alt="" style="max-height:150px">
+                    <img src="img/logo2.png" alt="" style="max-height:150px;">
                 </div>
             </div>
         </div>
@@ -277,11 +317,11 @@ a.socialIcon:hover, .socialHoverClass {
                     <div class="col-md-6">
                         <div class="row img-section align-middle">
                             <h2><span>Muebles De Oficina</span></h2>
-                            <img src="img/muebles-de-oficina.jpg" alt="" class="img-fluid">
-                        </div>     
+                            <img src="img/muebles-de-oficina.jpg" alt="" class="img-fluid image" style="">
+                          
 
                         <a href="index.php?tienda=1" class="btn btn-success">Visitar Tienda</a>
-                        
+                        </div>  
                         <div class="row">
                         <div class="col-12">
                         <div class="social-footer">
@@ -296,18 +336,19 @@ a.socialIcon:hover, .socialHoverClass {
 
                     <div class="col-md-6">
                         <div class="row img-section">
-                           <img src="img/refrigeracion-gastronomia.jpg" alt="" class="img-fluid">
-                         </div>
+                           <img src="img/refrigeracion-gastronomia.jpg" alt="" class="img-fluid image; " style="">
+                        
                                 <h2><span>Refrigeración & Gastronomia</span></h2>
                                 <a href="refrigeracion-gastronomia.php" class="btn btn-success">Visitar Tienda</a>
                             
+                        </div>
                         </div>
                     </div>
 
                     <div class="social-footer">
                             <ul class="social-network social-circle">
                                 <li><a target="_blank" href="https://www.facebook.com/CoexmaaPy" class="icoFacebook" title="Facebook"><i class="fa fa-facebook"></i></a></li>
-                                <li><a target="_blank" href="https://www.instagram.com/coexmasrl/" class="icoInstagram" title="Instagram"><i class="fa fa-instagram"></i></a></li>
+                                <li><a target="_blank" href="https://www.instagram.com/coexmapy/" class="icoInstagram" title="Instagram"><i class="fa fa-instagram"></i></a></li>
                             </ul>
                     </div>
                     

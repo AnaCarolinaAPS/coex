@@ -3,9 +3,6 @@
 <html lang="es">
 
 <?php 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 
   require "funciones/funciones.php";
@@ -13,7 +10,11 @@ error_reporting(E_ALL);
   include("includes/cart.php");
 ?>
   <body>
+      
   <?php 
+  if (isset($_SESSION['cart'])) {
+	$cart= $_SESSION['cart'];
+    } else { echo "<script type='text/javascript'>document.location.href='index.php';</script>";}
     
     $met_pagos= getMetodosDePago();
     $calc_envio= getMetodosDeEnvio();
@@ -21,9 +22,7 @@ error_reporting(E_ALL);
 
 
 
-if (isset($_SESSION['cart'])) {
-	$cart= $_SESSION['cart'];
-} else { echo "<script type='text/javascript'>document.location.href='index.php';</script>";}
+
 
 
 if($_SERVER['REQUEST_METHOD'] == "POST") {	
@@ -382,18 +381,34 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
 										foreach ($_SESSION['cart'] as $cart) { 
 									?>											
 										<tr>
-											<td><?php echo $cart['nombre'] ?></td>
+											<td><?php echo $cart['nombre'] ?>
+											<p style="margin-left: 10%;">
+											<?php
+												if ($cart['combinacion'] == "") {
+													echo '';
+												} else {
+													$valores = getProdAtributosValoresByStock ($cart['combinacion']);
+													if ($valores != null) { 
+														foreach ($valores as $linea) {
+															echo '<span class="label label-primary" style="font-size:10pt;"><b>'.$linea['atributo'].":</b> ".$linea['nombre'].'</span><br>';
+														}
+													} 
+												}
+											?>
+										</p>
+											</td>
 											<td><?php echo number_format($cart['precio'] *  $cart['qty'], 0, ',', '.')." Gs";?></td>
 										</tr>																
 									<?php } } ?>
 										<tr class="cart-subtotal">
-											<td>Envío</td>
+											<td style="float: right;">Total Envío (GS)</td>
 											<td id="totalenvio">A Coordinar</td>
 										</tr>
 									</tbody>
 									<tfoot>
-										<tr class="order-total">
-											<th>Total</th>
+										<tr class="order-total" style="
+    background: #e1eeea;">
+											<th>Total A Pagar (Gs.)</th>
 											<?php $total= $_SESSION['total']; ?>
 											<th id="total_pago"><?php echo number_format(getTotalCart(), 0, ',', '.')." Gs";?></th>
 										</tr>
@@ -411,6 +426,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
 	</div> <!-- page-area -->
 	<!-- </div> -->
 	<!-- Page -->
+	</div>
 
 	<!-- Footer top section -->	
 	<?php include("includes/footer.php");?>

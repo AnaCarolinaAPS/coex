@@ -2,6 +2,7 @@
 <!doctype html>
 <html lang="es">
 <?php 
+
 	require "funciones/funciones.php";
   include("includes/head.php"); 
 
@@ -77,7 +78,7 @@
             <div class="row">
                 <div class="container text-center">
                   <hr>
-                <h3 class="h3 titulo-seccion">Productos Destacados</h3>
+                <h3 class="h3 titulo-seccion">Productos Más Vendidos</h3>
                 <hr>
                 <p></p>
                     <div class="row">
@@ -123,7 +124,7 @@
                           </div-->
                           <div class="col-md-12  col-sm-6">
                             <hr>
-                            <h3 class="h3 titulo-seccion">Sillas de Oficina</h3>
+                            <h3 class="h3 titulo-seccion">Otras Sillas Recomendadas</h3>
                             <hr>
                             <p>La armonia perfecta entre la versatilidad y ligereza con un impresionandte toque de elegancia</p>
                               <div class="row">
@@ -203,7 +204,7 @@
 
 
 
-  <?php $categoryb = getProdbyCategoriaHome(5,4);?>
+  <?php $categoryb = getProdbyCategoriaHome(4,4);?>
     <section class="section-white">
         <div class="container">
             <div class="row">
@@ -214,9 +215,9 @@
                           </div-->
                           <div class="col-md-12 col-sm-6">
                             <hr>
-                            <h3 class="h3 titulo-seccion">Persianas</h3>
+                            <h3 class="h3 titulo-seccion">Equipos Para oficina</h3>
                             <hr>
-                            <p>Persianas verticales, horizontales, romanas y mucho mas</p>
+                            <!--p>Persianas verticales, horizontales, romanas y mucho mas</p-->
                               <div class="row">
                               <?php foreach ($categoryb as $row) { ?>
                                 <div class="col-md-3 col-sm-6">
@@ -298,7 +299,7 @@
 
 
 
-
+     <?php include("includes/marcas.php"); ?>
       <?php include("includes/newsletter.php"); ?>
       
 	    <?php include("includes/footer.php"); ?>
@@ -316,7 +317,33 @@
       
     <script src="js/bootstrap.min.js"></script>
     <script src="js/holder.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
     <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script>
+$('#owl-marca').owlCarousel({
+    loop:true,
+    margin:0,
+	dots:false,
+	lazyLoad:true,
+	autoplay:true,
+    nav:true,
+	navText : ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>'],
+    responsive:{
+        0:{
+            items:2
+        },
+        600:{
+            items:6
+        },
+        1000:{
+            items:6
+        }
+    }
+
+
+
+})
+</script>
   
   </body>
   <?php include("includes/scripts.php"); ?>
